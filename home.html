@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Shot | Professional Video Editing</title>
+    <!-- Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* --- Video Background --- */
+        #video-bg {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            object-fit: cover;
+        }
+
+        /* --- Dimmer Overlay --- */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Dark overlay to dim video */
+            z-index: -99;
+        }
+
+        /* --- Cool Animations --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0; /* Start hidden */
+        }
+        
+        /* Animation delay helper */
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-600 { animation-delay: 0.6s; }
+        
+        /* --- Nav Link Animation --- */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* --- Button Hover --- */
+        .cta-btn {
+            transition: all 0.3s ease;
+        }
+        .cta-btn:hover {
+            background-color: #fff;
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- Section Separator --- */
+        .section-separator {
+            width: 80px;
+            height: 3px;
+            background-color: #fff;
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        /* --- NEW: Hero Animation Specifics --- */
+        
+        /* Add this to center the title container before animation */
+        #hero-section {
+            justify-items: center;
+        }
+
+        #hero-title {
+            /* ADDED: This FORCES the title to stay on one line */
+            white-space: nowrap;
+            /* ADDED: Explicitly transition font-size */
+            transition: font-size 1s ease-in-out;
+        }
+
+        #hero-title-container {
+            transition: all 1s ease-in-out;
+            transform-origin: center center; /* Ensure scaling from center */
+        }
+        #hero-title-container.active {
+            /* REPLACED transform with grid alignment for smoother move */
+            justify-self: start; /* Move to start of grid cell */
+            text-align: left; /* Align text left */
+            /* UPDATED: Adjusted padding */
+            padding-left: 5%; 
+            transform: translateX(0); /* Override any old transform */
+            padding-top: 0; 
+            padding-bottom: 0;
+        }
+        #hero-title.active {
+            /* UPDATED: Made font smaller to prevent overlap */
+            font-size: 2.5rem; 
+        }
+
+        /* UPDATED: Subtitle/CTA now use opacity */
+        #hero-subtitle, #hero-cta {
+            transition: opacity 0.5s ease-in-out;
+        }
+        #hero-subtitle.fade-out, #hero-cta.fade-out {
+            opacity: 0;
+        }
+        /* ADDED: Style for subtitle reappearing */
+        #hero-subtitle.reappear {
+            opacity: 1;
+            font-size: 1rem; /* Smaller */
+            color: #d1d5db; /* text-gray-300 */
+            margin-top: 0.5rem;
+            transition: opacity 0.5s ease-in-out 0.5s; /* Fade in, then delay for fade-out */
+        }
+
+
+        #hero-video-embed {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+        }
+        #hero-video-embed.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Make hero section a grid for better positioning after animation */
+        #hero-section.active {
+            display: grid;
+            /* UPDATED: Gave title less space (45/55) to prevent overlap */
+            grid-template-columns: 45% 55%;
+            align-items: center;
+            /* REMOVED: justify-content: center; */
+            /* ADDED: This allows the justify-self:start to work */
+            justify-items: stretch; 
+        }
+
+        /* Responsive adjustments for the new layout */
+        @media (max-width: 768px) {
+            #hero-title-container.active {
+                /* UPDATED: Removed scale(1) to match */
+                transform: translateX(0); /* Keep centered on mobile */
+                text-align: center;
+            }
+            #hero-title.active {
+                font-size: 2.5rem; /* Adjust for mobile */
+            }
+            #hero-section.active {
+                grid-template-columns: 1fr; /* Stack vertically on mobile */
+            }
+        }
+
+    </style>
+</head>
+<body class="bg-black text-white">
+
+    <!-- 
+      BACKGROUND VIDEO 
+      TODO: Replace 'YOUR_BACKGROUND_VIDEO.mp4' with the link to your video file.
+      This link can be a relative path if you add the video to your GitHub repo (e.g., './assets/my-video.mp4')
+    --><video autoplay loop muted playsinline id="video-bg">
+        <source src="https://placehold.co/1920x1080/000000/000000/video.mp4" type="video/mp4">
+        <!-- Add more source types (webm, ogg) for better browser compatibility if you have them --></video>
+    <div class="video-overlay"></div>
+
+    <!-- Wrapper for content --><div class="relative z-10">
+
+        <!-- Header / Navigation --><header class="sticky top-0 z-50 bg-black/50 backdrop-blur-md">
+            <nav class="container mx-auto max-w-6xl px-6 py-4 flex justify-between items-center">
+                <!-- 
+                  LOGO 
+                  TODO: Replace 'YOUR_LOGO.png' with the link to your logo file.
+                  This link can be a relative path from your GitHub repo (e.g., './assets/logo.png')
+                --><a href="#" class="text-2xl font-bold tracking-wider">
+                    <!-- If you have a logo image: --><img src="https://placehold.co/120x50/000000/FFFFFF?text=3-SHOT" alt="3-Shot Logo" class="h-8 w-auto grayscale">
+                    
+                    <!-- If you want text instead, comment out the img tag above and uncomment this: --><!-- 3-SHOT --></a>
+                
+                <!-- Menu --><ul class="hidden md:flex space-x-8 font-medium">
+                    <li><a href="#" class="nav-link">Home</a></li>
+                    <li><a href="#services" class="nav-link">Services</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <!-- Mobile Menu Button (simple) --><button class="md:hidden text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Content --><main>
+
+            <!-- Hero Section - UPDATED FOR ANIMATION -->
+            <!-- UPDATED: Removed md:flex-row to force initial center column -->
+            <section id="hero-section" class="min-h-[calc(100vh-80px)] h-full flex flex-col items-center justify-center text-center px-6 py-24 transition-all duration-1000 ease-in-out">
+                <!-- UPDATED: Removed md:mb-0 md:mr-12 for initial centering -->
+                <div id="hero-title-container" class="max-w-3xl flex-shrink-0 mb-12 transition-all duration-1000 ease-in-out">
+                    <h1 id="hero-title" class="animate-fadeInUp text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter transition-all duration-1000 ease-in-out">
+                        Bring Ideas to <span class="text-gray-400">Real</span>.
+                    </h1>
+                    <p id="hero-subtitle" class="animate-fadeInUp delay-200 mt-6 text-lg sm:text-xl text-gray-300 max-w-xl mx-auto transition-all duration-1000 ease-in-out">
+                        We transform your raw footage into powerful, professional videos.
+                        One take is all you need. We handle the rest.
+                    </p>
+                    <div id="hero-cta" class="animate-fadeInUp delay-400 mt-10 transition-all duration-1000 ease-in-out">
+                        <a href="#services" class="cta-btn inline-block bg-transparent border-2 border-white text-white font-bold py-3 px-10 rounded-full text-lg uppercase tracking-wider">
+                            Our Process
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 
+                  YOUTUBE EMBED for Hero Section 
+                  TODO: Replace 'dQw4w9WgXcQ' with your YouTube video's ID.
+                  This will appear after the title animation.
+                -->
+                <!-- UPDATED: Removed md:mt-0 for initial centering -->
+                <div id="hero-video-embed" class="w-full max-w-lg aspect-video rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl mt-12 opacity-0 transform translate-y-20 transition-all duration-1000 ease-in-out">
+                    <iframe 
+                        class="w-full h-full" 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=G-xbfzJ5G9n1vWaS" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </section>
+
+            <!-- Services Section ("3-Shot") --><section id="services" class="py-24 bg-black">
+                <div class="container mx-auto max-w-6xl px-6 text-center">
+                    <h2 class="animate-fadeInUp text-3xl sm:text-4xl font-black uppercase">The 3-Shot Process</h2>
+                    <div class="animate-fadeInUp section-separator"></div>
+                    
+                    <div class="mt-16 grid md:grid-cols-3 gap-10">
+                        <!-- Card 1: One Take --><div class="animate-fadeInUp delay-200 bg-gray-900/50 p-8 rounded-lg border border-gray-700 backdrop-blur-sm">
+                            <div class="text-5xl font-black text-gray-600 mb-4">01</div>
+                            <h3 class="text-2xl font-bold mb-3">One Take</h3>
+                            <p class="text-gray-300">
+                                You capture the moment. We consult with you to understand your vision, goals, and the story you want to tell.
+                            </p>
+                        </div>
+                        
+                        <!-- Card 2: Edit --><div class="animate-fadeInUp delay-400 bg-gray-800/80 p-8 rounded-lg border border-gray-600 backdrop-blur-sm shadow-2xl scale-105">
+                            <div class="text-5xl font-black text-gray-500 mb-4">02</div>
+                            <h3 class="text-2xl font-bold mb-3">Edit</h3>
+                            <p class="text-gray-300">
+                                This is where the magic happens. We apply professional-grade effects, color correction, and sound design to elevate your footage.
+                            </p>
+                        </div>
+                        
+                        <!-- Card 3: Export! --><div class="animate-fadeInUp delay-600 bg-gray-900/50 p-8 rounded-lg border border-gray-700 backdrop-blur-sm">
+                            <div class="text-5xl font-black text-gray-600 mb-4">03</div>
+                            <h3 class="text-2xl font-bold mb-3">Export!</h3>
+                            <p class="text-gray-300">
+                                Receive your final, polished video in any format you need, ready to captivate your audience.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- YouTube Video Section (Existing one, can be removed if new one is enough) --><section id="about" class="py-24 bg-gray-900">
+                <div class="container mx-auto max-w-6xl px-6">
+                    <div class="text-center mb-12">
+                         <h2 class="animate-fadeInUp text-3xl sm:text-4xl font-black uppercase">More of Our Work</h2>
+                         <div class="animate-fadeInUp section-separator"></div>
+                         <p class="animate-fadeInUp delay-200 mt-4 text-lg text-gray-300 max-w-2xl mx-auto">
+                             A deeper dive into our portfolio and capabilities.
+                         </p>
+                    </div>
+                   
+                    <!-- 
+                      YOUTUBE EMBED 
+                      TODO: Replace 'dQw4w9WgXcQ' with your YouTube video's ID.
+                    --><div class="animate-fadeInUp delay-400 aspect-video max-w-4xl mx-auto rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl">
+                        <iframe 
+                            class="w-full h-full" 
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=G-xbfzJ5G9n1vWaS" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section --><section id="contact" class="py-24 bg-black">
+                <div class="container mx-auto max-w-3xl px-6 text-center">
+                    <h2 class="animate-fadeInUp text-3xl sm:text-4xl font-black uppercase">Get Started</h2>
+                    <div class="animate-fadeInUp section-separator"></div>
+                    <p class="animate-fadeInUp delay-200 mt-6 text-lg sm:text-xl text-gray-300">
+                        Ready to bring your idea to life? Let's talk.
+                    </p>
+                    <div class="animate-fadeInUp delay-400 mt-10 space-y-6">
+                        <a href="mailto:all@3-shot.com" class="cta-btn block bg-transparent border-2 border-white text-white font-bold py-4 px-10 rounded-full text-lg uppercase tracking-wider w-full max-w-md mx-auto">
+                            Email: all@3-shot.com
+                        </a>
+                        <a href="tel:+85269242257" class="cta-btn block bg-white text-black font-bold py-4 px-10 rounded-full text-lg uppercase tracking-wider w-full max-w-md mx-auto">
+                            Call: +852 69242257
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer --><footer class="py-12 bg-gray-900 border-t border-gray-800">
+            <div class="container mx-auto max-w-6xl px-6 text-center text-gray-400">
+                <p>&copy; <span id="current-year"></span> 3-Shot. All rights reserved.</p>
+                <p class="text-sm mt-2">Powered by your vision. Perfected by us.</p>
+            </div>
+        </footer>
+
+    </div>
+    
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Simple Intersection Observer for general animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Optional: unobserve after animation
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        });
+
+        // Target all elements that should animate generally
+        document.querySelectorAll('.animate-fadeInUp').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Re-style elements once they become 'visible' for general animations
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .animate-fadeInUp.visible {
+                animation: fadeInUp 0.8s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(style);
+
+
+        // --- NEW: Hero Section Specific Animation Script ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroSection = document.getElementById('hero-section');
+            const heroTitleContainer = document.getElementById('hero-title-container');
+            const heroTitle = document.getElementById('hero-title');
+            const heroSubtitle = document.getElementById('hero-subtitle');
+            const heroCta = document.getElementById('hero-cta');
+            const heroVideoEmbed = document.getElementById('hero-video-embed');
+
+            // Delay for initial title presentation
+            setTimeout(() => {
+                // Trigger title animation
+                heroSection.classList.add('active');
+                heroTitleContainer.classList.add('active');
+                heroTitle.classList.add('active');
+                
+                // Fade out subtitle and CTA
+                heroSubtitle.classList.add('fade-out');
+                heroCta.classList.add('fade-out');
+
+
+                // After title animation, fade in video
+                setTimeout(() => {
+                    heroVideoEmbed.classList.add('active');
+
+                    // --- Subtitle Reappear / Fade Out Logic ---
+                    // 1. Reappear
+                    heroSubtitle.classList.remove('fade-out');
+                    heroSubtitle.classList.add('reappear');
+
+                    // 2. Wait 2 seconds, then fade out again
+                    setTimeout(() => {
+                        heroSubtitle.classList.remove('reappear');
+                        heroSubtitle.classList.add('fade-out');
+                    }, 2000); // How long the subtitle STAYS visible
+                    
+                }, 1000); // This delay should match the CSS transition duration
+            }, 2000); // Initial delay before the animation starts
+        });
+        
+    </script>
+
+</body>
+</html>
+
+
