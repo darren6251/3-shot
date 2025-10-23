@@ -16,20 +16,33 @@
             overflow-x: hidden;
         }
 
-        /* --- Video Background --- */
-        #video-bg {
+        /* --- NEW: Vimeo Background --- */
+        #vimeo-bg-iframe {
             position: fixed;
-            right: 0;
-            bottom: 0;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%);
             min-width: 100%;
             min-height: 100%;
-            width: auto;
-            height: auto;
             z-index: -100;
-            object-fit: cover;
+            pointer-events: none; /* Make it unclickable */
         }
 
-        /* --- Dimmer Overlay --- */
+        /* Scale video to cover viewport */
+        @media (min-aspect-ratio: 16/9) {
+          #vimeo-bg-iframe {
+            height: 56.25vw; /* 100 * 9 / 16 */
+          }
+        }
+        @media (max-aspect-ratio: 16/9) {
+          #vimeo-bg-iframe {
+            width: 177.78vh; /* 100 * 16 / 9 */
+          }
+        }
+
+        /* --- Dimmer Overlay (Still needed) --- */
         .video-overlay {
             position: fixed;
             top: 0;
@@ -38,6 +51,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7); /* Dark overlay to dim video */
             z-index: -99;
+            pointer-events: none; /* Make it unclickable */
         }
 
         /* --- Cool Animations --- */
@@ -131,7 +145,6 @@
             z-index: 10;
         }
         #hero-title-container.active {
-            /* FIXED: Use stable viewport units, not percentages */
             transform: translate(-24vw, 0) scale(0.5); 
         }
         #hero-title.active {
@@ -159,13 +172,11 @@
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 1s ease-in-out 0.2s, transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
-            /* FIXED: Give it an explicit, contained width */
             width: 48%;
-            max-width: none; /* Override tailwind */
+            max-width: none;
         }
         #hero-video-embed.active {
             opacity: 1;
-            /* FIXED: Use stable viewport units, not percentages */
             transform: translate(26vw, 0);
         }
         
@@ -188,7 +199,6 @@
             #hero-video-embed {
                 position: absolute;
                 grid-area: 1 / 1;
-                /* FIXED: Give mobile an explicit width */
                 width: 80%;
             }
             #hero-video-embed.active {
@@ -203,10 +213,19 @@
 
     <!-- 
       BACKGROUND VIDEO 
-      TODO: Replace 'YOUR_BACKGROUND_VIDEO.mp4' with the link to your video file.
-    --><video autoplay loop muted playsinline id="video-bg">
-        <source src="https://placehold.co/1920x1080/000000/000000/video.mp4" type="video/mp4">
-    </video>
+      REPLACED with your Vimeo iframe.
+      Added ID, autoplay/background params, and new styles.
+    -->
+    <iframe 
+        src="https://player.vimeo.com/video/1129973132?background=1&autoplay=1&loop=1&muted=1&badge=0&autopause=0&player_id=0&app_id=58479" 
+        id="vimeo-bg-iframe" 
+        frameborder="0" 
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        title="3-shotvideo blacground">
+    </iframe>
+    
+    <!-- This overlay dims the background video -->
     <div class="video-overlay"></div>
 
     <!-- Wrapper for content --><div class="relative z-10">
@@ -261,13 +280,12 @@
 
                 <!-- 
                   YOUTUBE EMBED for Hero Section 
-                  TODO: Replace 'dQw4w9WgXcQ' with your YouTube video's ID.
+                  REPLACED Rick-roll with your video.
                 -->
-                <!-- FIXED: Removed w-full and max-w-lg -->
                 <div id="hero-video-embed" class="aspect-video rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl opacity-0 transform translate-y-20 transition-all duration-1000 ease-in-out">
                     <iframe 
                         class="w-full h-full" 
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=G-xbfzJ5G9n1vWaS" 
+                        src="https://www.youtube.com/embed/ujslIsgJgso" 
                         title="YouTube video player" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -324,11 +342,11 @@
                    
                     <!-- 
                       YOUTUBE EMBED 
-                      TODO: Replace 'dQw4w9WgXcQ' with your YouTube video's ID.
+                      REPLACED Rick-roll with your video.
                     --><div class="animate-fadeInUp delay-400 aspect-video max-w-4xl mx-auto rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl">
                         <iframe 
                             class="w-full h-full" 
-                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=G-xbfzJ5G9n1vWaS" 
+                            src="https://www.youtube.com/embed/ujslIsgJgso" 
                             title="YouTube video player" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -344,7 +362,7 @@
                     <div class="animate-fadeInUp section-separator"></div>
                     <p class="animate-fadeInUp delay-200 mt-6 text-lg sm:text-xl text-gray-300">
                         Ready to bring your idea to life? Let's talk.
-                    </p>
+                    </sP>
                     <div class="animate-fadeInUp delay-400 mt-10 space-y-6">
                         <a href="mailto:all@3-shot.com" class="cta-btn block bg-transparent border-2 border-white text-white font-bold py-4 px-10 rounded-full text-lg uppercase tracking-wider w-full max-w-md mx-auto">
                             Email: all@3-shot.com
