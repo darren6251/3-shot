@@ -103,97 +103,97 @@
 
         /* --- NEW: Hero Animation Specifics --- */
         
-        /* UPDATED: Use grid to center both items on top of each other */
         #hero-section {
-            display: grid;
-            place-items: center;
-            /* ADDED: prevent scrollbars during animation */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden; 
         }
 
+        #hero-animation-wrapper {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 100%;
+            max-width: 64rem; /* 1024px */
+        }
+
         #hero-title {
-            /* ADDED: This FORCES the title to stay on one line */
             white-space: nowrap;
-            /* ADDED: Explicitly transition font-size */
             transition: font-size 1s ease-in-out;
         }
 
         #hero-title-container {
-            /* REMOVED: transition: font-size 1s ease-in-out; */
-            /* The parent container's 'scale' will handle shrinking */
-        }
-
-        #hero-title-container {
-            /* UPDATED: Transition transform, not 'all' */
+            position: absolute;
+            grid-area: 1 / 1;
             transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
             transform-origin: center center;
-            /* ADDED: Ensure it's on top */
             z-index: 10;
         }
         #hero-title-container.active {
-            /* REPLACED: Percentages with viewport units (vw) for stable positioning */
-            /* UPDATED: Set vertical translate to 0 for level alignment */
-            transform: translate(-30vw, 0) scale(0.6); /* Moves 30% of screen width left */
+            /* FIXED: Use stable viewport units, not percentages */
+            transform: translate(-24vw, 0) scale(0.5); 
         }
         #hero-title.active {
-            /* REMOVED: All rules. No longer needed. */
+            /* No longer needed */
         }
 
-        /* UPDATED: Subtitle/CTA now use opacity */
         #hero-subtitle, #hero-cta {
             transition: opacity 0.5s ease-in-out;
         }
         #hero-subtitle.fade-out, #hero-cta.fade-out {
             opacity: 0;
         }
-        /* ADDED: Style for subtitle reappearing */
         #hero-subtitle.reappear {
             opacity: 1;
-            font-size: 1rem; /* Smaller */
+            font-size: 1rem;
             color: #d1d5db; /* text-gray-300 */
             margin-top: 0.5rem;
-            transition: opacity 0.5s ease-in-out 0.5s; /* Fade in, then delay for fade-out */
+            transition: opacity 0.5s ease-in-out 0.5s;
         }
 
 
         #hero-video-embed {
-            /* ADDED: Grid-area makes it stack in the same cell */
+            position: absolute;
             grid-area: 1 / 1; 
             opacity: 0;
             transform: translateY(20px);
-            /* UPDATED: Added delay to opacity, new easing */
             transition: opacity 1s ease-in-out 0.2s, transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+            /* FIXED: Give it an explicit, contained width */
+            width: 48%;
+            max-width: none; /* Override tailwind */
         }
         #hero-video-embed.active {
             opacity: 1;
-            /* REPLACED: Percentages with viewport units (vw) */
-            /* UPDATED: Set vertical translate to 0 for level alignment */
-            transform: translate(30vw, 0); /* Moves 30% of screen width right */
+            /* FIXED: Use stable viewport units, not percentages */
+            transform: translate(26vw, 0);
         }
         
-        /* Make hero section a grid for better positioning after animation */
         #hero-section.active {
-            /* REMOVED: All grid rules. The parent section doesn't change. */
+            /* No longer needed */
         }
 
         /* Responsive adjustments for the new layout */
         @media (max-width: 768px) {
+            #hero-title-container {
+                position: absolute;
+                grid-area: 1 / 1;
+            }
             #hero-title-container.active {
-                /* UPDATED: Stacked animation */
-                /* MOVED: -25vh to -20vh */
-                transform: translate(0, -25vh) scale(0.7); /* More space */
+                transform: translate(0, -30vh) scale(0.6); 
             }
             #hero-title.active {
-                /* REMOVED: All rules. */
+                /* No longer needed */
             }
-            #hero-section.active {
-                /* REMOVED: All rules. */
+            #hero-video-embed {
+                position: absolute;
+                grid-area: 1 / 1;
+                /* FIXED: Give mobile an explicit width */
+                width: 80%;
             }
             #hero-video-embed.active {
-                /* UPDATED: Stacked animation */
                 opacity: 1;
-                /* MOVED: 15vh to 20vh */
-                transform: translate(0, 20vh); /* More space */
+                transform: translate(0, 25vh); 
             }
         }
 
@@ -204,10 +204,9 @@
     <!-- 
       BACKGROUND VIDEO 
       TODO: Replace 'YOUR_BACKGROUND_VIDEO.mp4' with the link to your video file.
-      This link can be a relative path if you add the video to your GitHub repo (e.g., './assets/my-video.mp4')
     --><video autoplay loop muted playsinline id="video-bg">
         <source src="https://placehold.co/1920x1080/000000/000000/video.mp4" type="video/mp4">
-        <!-- Add more source types (webm, ogg) for better browser compatibility if you have them --></video>
+    </video>
     <div class="video-overlay"></div>
 
     <!-- Wrapper for content --><div class="relative z-10">
@@ -217,11 +216,9 @@
                 <!-- 
                   LOGO 
                   TODO: Replace 'YOUR_LOGO.png' with the link to your logo file.
-                  This link can be a relative path from your GitHub repo (e.g., './assets/logo.png')
                 --><a href="#" class="text-2xl font-bold tracking-wider">
-                    <!-- If you have a logo image: --><img src="https://placehold.co/120x50/000000/FFFFFF?text=3-SHOT" alt="3-Shot Logo" class="h-8 w-auto grayscale">
-                    
-                    <!-- If you want text instead, comment out the img tag above and uncomment this: --><!-- 3-SHOT --></a>
+                    <img src="https://placehold.co/120x50/000000/FFFFFF?text=3-SHOT" alt="3-Shot Logo" class="h-8 w-auto grayscale">
+                </a>
                 
                 <!-- Menu --><ul class="hidden md:flex space-x-8 font-medium">
                     <li><a href="#" class="nav-link">Home</a></li>
@@ -240,18 +237,21 @@
 
         <!-- Main Content --><main>
 
-            <!-- Hero Section - UPDATED FOR ANIMATION -->
-            <!-- UPDATED: min-h-screen and pt-20 to center on *full* screen, not just below header -->
-            <section id="hero-section" class="min-h-screen h-full flex flex-col items-center justify-center text-center px-6 py-24 pt-20 -mt-20 transition-all duration-1000 ease-in-out">
-                <!-- UPDATED: Removed md:mb-0 md:mr-12 for initial centering -->
-                <div id="hero-title-container" class="max-w-3xl flex-shrink-0 mb-12 transition-all duration-1000 ease-in-out">
-                    <h1 id="hero-title" class="animate-fadeInUp text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter transition-all duration-1000 ease-in-out">
-                        Bring Ideas to <span class="text-gray-400">Real</span>.
-                    </h1>
-                    <p id="hero-subtitle" class="animate-fadeInUp delay-200 mt-6 text-lg sm:text-xl text-gray-300 max-w-xl mx-auto transition-all duration-1000 ease-in-out">
-                        We transform your raw footage into powerful, professional videos.
-                        One take is all you need. We handle the rest.
-                    </p>
+            <!-- Hero Section -->
+            <section id="hero-section" class="min-h-screen h-full flex items-center justify-center text-center px-6 py-24 pt-20 -mt-20 transition-all duration-1000 ease-in-out">
+                
+                <!-- Animation Wrapper -->
+                <div id="hero-animation-wrapper" class="max-w-4xl">
+
+                    <!-- Title Container -->
+                    <div id="hero-title-container" class="flex-shrink-0 mb-12 transition-all duration-1000 ease-in-out">
+                        <h1 id="hero-title" class="animate-fadeInUp text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter transition-all duration-1000 ease-in-out">
+                            Bring Ideas to <span class="text-gray-400">Real</span>.
+                        </h1>
+                        <p id="hero-subtitle" class="animate-fadeInUp delay-200 mt-6 text-lg sm:text-xl text-gray-300 max-w-xl mx-auto transition-all duration-1000 ease-in-out">
+                            We transform your raw footage into powerful, professional videos.
+                            One take is all you need. We handle the rest.
+                        </p>
                     <div id="hero-cta" class="animate-fadeInUp delay-400 mt-10 transition-all duration-1000 ease-in-out">
                         <a href="#services" class="cta-btn inline-block bg-transparent border-2 border-white text-white font-bold py-3 px-10 rounded-full text-lg uppercase tracking-wider">
                             Our Process
@@ -262,20 +262,21 @@
                 <!-- 
                   YOUTUBE EMBED for Hero Section 
                   TODO: Replace 'dQw4w9WgXcQ' with your YouTube video's ID.
-                  This will appear after the title animation.
                 -->
-                <!-- UPDATED: Removed md:mt-0 for initial centering -->
-                <!-- UPDATED: max-w-2xl to max-w-xl as a compromise for space -->
-                <div id="hero-video-embed" class="w-full max-w-xl aspect-video rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl mt-12 opacity-0 transform translate-y-20 transition-all duration-1000 ease-in-out">
+                <!-- FIXED: Removed w-full and max-w-lg -->
+                <div id="hero-video-embed" class="aspect-video rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl opacity-0 transform translate-y-20 transition-all duration-1000 ease-in-out">
                     <iframe 
                         class="w-full h-full" 
-                        src="https://www.youtube.com/embed/ujslIsgJgso?si=G-xbfzJ5G9n1vWaS" 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=G-xbfzJ5G9n1vWaS" 
                         title="YouTube video player" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                         allowfullscreen>
                     </iframe>
                 </div>
+                
+                </div> <!-- END: Animation Wrapper -->
+
             </section>
 
             <!-- Services Section ("3-Shot") --><section id="services" class="py-24 bg-black">
@@ -305,7 +306,7 @@
                             <h3 class="text-2xl font-bold mb-3">Export!</h3>
                             <p class="text-gray-300">
                                 Receive your final, polished video in any format you need, ready to captivate your audience.
-                            </p>
+                            </D>
                         </div>
                     </div>
                 </div>
@@ -327,7 +328,7 @@
                     --><div class="animate-fadeInUp delay-400 aspect-video max-w-4xl mx-auto rounded-lg overflow-hidden border-2 border-gray-700 shadow-2xl">
                         <iframe 
                             class="w-full h-full" 
-                            src="https://www.youtube.com/embed/ujslIsgJgso?si=G-xbfzJ5G9n1vWaS" 
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=G-xbfzJ5G9n1vWaS" 
                             title="YouTube video player" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -407,6 +408,12 @@
             const heroCta = document.getElementById('hero-cta');
             const heroVideoEmbed = document.getElementById('hero-video-embed');
 
+            // --- FIXED: Added checks to ensure elements exist before adding listeners ---
+            if (!heroSection || !heroTitleContainer || !heroTitle || !heroSubtitle || !heroCta || !heroVideoEmbed) {
+                console.error('Hero animation elements not found. Animation will not run.');
+                return; // Stop the script if elements are missing
+            }
+
             // Delay for initial title presentation
             setTimeout(() => {
                 // Trigger title animation
@@ -442,11 +449,4 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
 
