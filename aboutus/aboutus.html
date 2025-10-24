@@ -98,6 +98,14 @@
             border-color: rgba(255, 255, 255, 0.3);
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
+        
+        /* --- NEW: Mobile Menu --- */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        #mobile-menu.active {
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body class="bg-black text-white">
@@ -115,27 +123,39 @@
     <!-- Dimmer Overlay -->
     <div class="video-overlay"></div>
 
+    <!-- NEW: Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black z-[60] transform -translate-x-full md:hidden">
+        <div class="flex justify-end p-6">
+            <button id="close-menu-btn">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <nav class="flex flex-col items-center justify-center h-full -mt-16 space-y-8">
+            <a href="../index.html" class="text-3xl font-bold nav-link">Home</a>
+            <a href="aboutus.html" class="text-3xl font-bold nav-link">About Us</a>
+            <a href="../index.html#contact" class="text-3xl font-bold nav-link">Contact</a>
+        </nav>
+    </div>
+
     <!-- Wrapper for content --><div class="relative z-10">
 
         <!-- Header / Navigation --><header class="sticky top-0 z-50 bg-black/50 backdrop-blur-md">
             <nav class="container mx-auto max-w-6xl px-6 py-4 flex justify-between items-center">
                 <!-- 
                   LOGO PLACEHOLDER
-                  UPDATED: Links relative to new folder
                 -->
                 <a href="../index.html" id="logo-placeholder" class="text-2xl font-bold tracking-wider" style="opacity: 1;">
                     <img src="https://placehold.co/120x50/000000/FFFFFF?text=3-SHOT" alt="3-Shot Logo" class="h-8 w-auto grayscale">
                 </a>
                 
                 <!-- Menu -->
-                <!-- UPDATED: Nav links relative to new folder -->
                 <ul class="hidden md:flex space-x-8 font-medium">
                     <li><a href="../index.html" class="nav-link">Home</a></li>
                     <li><a href="aboutus.html" class="nav-link">About Us</a></li>
                     <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
                 </ul>
                 
-                <!-- Mobile Menu Button --><button class="md:hidden text-white">
+                <!-- Mobile Menu Button --><button id="open-menu-btn" class="md:hidden text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                     </svg>
@@ -251,9 +271,33 @@
         `;
         document.head.appendChild(style);
         
-        // NOTE: Homepage-specific logo animation script was intentionally removed from this page.
+        // --- NEW: Mobile Menu Toggle ---
+        const openMenuBtn = document.getElementById('open-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a'); // Get all links in the menu
+
+        if (openMenuBtn && closeMenuBtn && mobileMenu) {
+            // Open menu
+            openMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+            });
+
+            // Close menu
+            closeMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+
+            // Close menu when a link is clicked (for anchor links)
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+        }
         
     </script>
 
 </body>
 </html>
+
