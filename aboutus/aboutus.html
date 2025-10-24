@@ -99,7 +99,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
-        /* --- NEW: Mobile Menu --- */
+        /* --- Mobile Menu --- */
         #mobile-menu {
             transition: transform 0.3s ease-in-out;
         }
@@ -123,7 +123,7 @@
     <!-- Dimmer Overlay -->
     <div class="video-overlay"></div>
 
-    <!-- NEW: Mobile Menu Overlay -->
+    <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-black z-[60] transform -translate-x-full md:hidden">
         <div class="flex justify-end p-6">
             <button id="close-menu-btn">
@@ -133,6 +133,9 @@
         <nav class="flex flex-col items-center justify-center h-full -mt-16 space-y-8">
             <a href="../index.html" class="text-3xl font-bold nav-link">Home</a>
             <a href="aboutus.html" class="text-3xl font-bold nav-link">About Us</a>
+            <!-- NEW: Tools Links -->
+            <a href="../tools/heic-converter.html" class="text-3xl font-bold nav-link">HEIC Converter</a>
+            <a href="../tools/qr-generator.html" class="text-3xl font-bold nav-link">QR Generator</a>
             <a href="../index.html#contact" class="text-3xl font-bold nav-link">Contact</a>
         </nav>
     </div>
@@ -149,9 +152,22 @@
                 </a>
                 
                 <!-- Menu -->
-                <ul class="hidden md:flex space-x-8 font-medium">
+                <ul class="hidden md:flex space-x-8 font-medium items-center">
                     <li><a href="../index.html" class="nav-link">Home</a></li>
                     <li><a href="aboutus.html" class="nav-link">About Us</a></li>
+                    
+                    <!-- NEW: Tools Dropdown -->
+                    <li class="relative group">
+                        <button class="nav-link flex items-center">
+                            Tools
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <ul class="absolute left-0 mt-2 w-48 bg-black/80 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg py-2 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                            <li><a href="../tools/heic-converter.html" class="block px-4 py-2 hover:bg-gray-700">HEIC Converter</a></li>
+                            <li><a href="../tools/qr-generator.html" class="block px-4 py-2 hover:bg-gray-700">QR Generator</a></li>
+                        </ul>
+                    </li>
+                    
                     <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
                 </ul>
                 
@@ -189,7 +205,7 @@
             </section>
 
             <!-- 
-              NEW: Meet the Team Section
+              Meet the Team Section
             -->
             <section class="py-24 bg-black/30">
                 <div class="container mx-auto max-w-6xl px-6 text-center">
@@ -200,7 +216,7 @@
                         
                         <!-- Team Member Card: Darren Ng -->
                         <a href="members/darren-ng.html" class="animate-fadeInUp delay-200 team-card block p-8 rounded-lg text-center">
-                            <img src="https://raw.githubusercontent.com/darren6251/3-shot/refs/heads/main/aboutus/daricon.png">
+                            <img src="https://raw.githubusercontent.com/darren6251/3-shot/refs/heads/main/aboutus/daricon.png" alt="Darren Ng" class="w-32 h-32 rounded-full mx-auto mb-6 border-2 border-gray-700 object-cover">
                             <h3 class="text-2xl font-bold mb-1">Darren Ng</h3>
                             <p class="text-gray-400 font-medium">CEO of 3-shot</p>
                             <p class="text-gray-300 mt-4 text-sm">
@@ -211,10 +227,9 @@
                             </span>
                         </a>
 
-                        <!-- UPDATED: Team Member Card: Tera Sze -->
+                        <!-- Team Member Card: Tera Sze -->
                         <div class="animate-fadeInUp delay-400 team-card p-8 rounded-lg text-center">
-                            <!-- TODO: Add Tera Sze's image URL here -->
-                            <img src="https://github.com/darren6251/3-shot/blob/main/aboutus/teraszeicon.jpg?raw=true" class="w-32 h-32 rounded-full mx-auto mb-6 border-2 border-gray-700">
+                            <img src="https://placehold.co/150x150/111827/FFFFFF?text=Tera+Sze" alt="Tera Sze" class="w-32 h-32 rounded-full mx-auto mb-6 border-2 border-gray-700 object-cover">
                             <h3 class="text-2xl font-bold mb-1">Tera Sze</h3>
                             <p class="text-gray-400 font-medium">Main Editor of 3-shot</p>
                             <p class="text-gray-300 mt-4 text-sm">
@@ -240,7 +255,7 @@
 
         <!-- Footer --><footer class="py-12 bg-gray-900 border-t border-gray-800">
             <div class="container mx-auto max-w-6xl px-6 text-center text-gray-400">
-                <p>&copy; <span id="current-year"></span> 3-Shot Limited. All rights reserved.</p>
+                <p>&copy; <span id="current-year"></span> 3-Shot. All rights reserved.</p>
                 <p class="text-sm mt-2">Powered by your vision. Perfected by us.</p>
             </div>
         </footer>
@@ -272,7 +287,7 @@
         `;
         document.head.appendChild(style);
         
-        // --- NEW: Mobile Menu Toggle ---
+        // --- Mobile Menu Toggle ---
         const openMenuBtn = document.getElementById('open-menu-btn');
         const closeMenuBtn = document.getElementById('close-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
