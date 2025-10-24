@@ -86,7 +86,7 @@
             border-radius: 2px;
         }
 
-        /* --- NEW: Hero Animation Specifics --- */
+        /* --- Hero Animation Specifics --- */
 
         /* 1. The Fullscreen Logo Overlay */
         #logo-animation-overlay {
@@ -164,6 +164,14 @@
                 padding-top: 4rem; /* Add space from header */
             }
         }
+        
+        /* --- NEW: Mobile Menu --- */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        #mobile-menu.active {
+            transform: translateX(0);
+        }
 
     </style>
 </head>
@@ -190,29 +198,39 @@
     <!-- Dimmer Overlay -->
     <div class="video-overlay"></div>
 
+    <!-- NEW: Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black z-[60] transform -translate-x-full md:hidden">
+        <div class="flex justify-end p-6">
+            <button id="close-menu-btn">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <nav class="flex flex-col items-center justify-center h-full -mt-16 space-y-8">
+            <a href="index.html" class="text-3xl font-bold nav-link">Home</a>
+            <a href="aboutus/aboutus.html" class="text-3xl font-bold nav-link">About Us</a>
+            <a href="#contact" class="text-3xl font-bold nav-link">Contact</a>
+        </nav>
+    </div>
+
     <!-- Wrapper for content --><div class="relative z-10">
 
         <!-- Header / Navigation --><header class="sticky top-0 z-50 bg-black/50 backdrop-blur-md">
             <nav class="container mx-auto max-w-6xl px-6 py-4 flex justify-between items-center">
                 <!-- 
                   LOGO PLACEHOLDER
-                  This is where the animation will "land".
-                  It starts invisible and fades in.
                 -->
-                <!-- UPDATED: href changed to index.html -->
                 <a href="index.html" id="logo-placeholder" class="text-2xl font-bold tracking-wider">
                     <img src="https://placehold.co/120x50/000000/FFFFFF?text=3-SHOT" alt="3-Shot Logo" class="h-8 w-auto grayscale">
                 </a>
                 
                 <!-- Menu -->
-                <!-- UPDATED: Nav links modified -->
                 <ul class="hidden md:flex space-x-8 font-medium">
                     <li><a href="index.html" class="nav-link">Home</a></li>
                     <li><a href="aboutus/aboutus.html" class="nav-link">About Us</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                 </ul>
                 
-                <!-- Mobile Menu Button --><button class="md:hidden text-white">
+                <!-- Mobile Menu Button --><button id="open-menu-btn" class="md:hidden text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                     </svg>
@@ -224,7 +242,6 @@
 
             <!-- 
               NEW: Hero Section
-              Reworked for the slide-in animation.
             -->
             <section class="min-h-[calc(100vh-80px)] h-full flex items-center justify-center text-left px-6 py-24 transition-all duration-1000 ease-in-out">
                 
@@ -264,7 +281,6 @@
             </section>
 
             <!-- Services Section ("3-Shot") -->
-            <!-- UPDATED: ID changed from #services to #process since nav link was removed -->
             <section id="services" class="py-24 bg-black">
                 <div class="container mx-auto max-w-6xl px-6 text-center">
                     <h2 class="animate-fadeInUp text-3xl sm:text-4xl font-black uppercase">The 3-Shot Process</h2>
@@ -297,7 +313,6 @@
             </section>
             
             <!-- More Work Section -->
-            <!-- UPDATED: ID changed from #about to #more-work since nav link changed -->
             <section id="about" class="py-24 bg-gray-900">
                 <div class="container mx-auto max-w-6xl px-6">
                     <div class="text-center mb-12">
@@ -375,7 +390,7 @@
         document.head.appendChild(style);
 
 
-        // --- NEW: Hero Section Specific Animation Script ---
+        // --- Hero Section Specific Animation Script ---
         document.addEventListener('DOMContentLoaded', () => {
             
             // Get all the elements
@@ -427,8 +442,35 @@
             }, 1000); // 1-second delay before starting
         });
         
+        // --- NEW: Mobile Menu Toggle ---
+        const openMenuBtn = document.getElementById('open-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a'); // Get all links in the menu
+
+        if (openMenuBtn && closeMenuBtn && mobileMenu) {
+            // Open menu
+            openMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+            });
+
+            // Close menu
+            closeMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+
+            // Close menu when a link is clicked (for anchor links)
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+        }
+        
     </script>
 
 </body>
 </html>
+
+
 
