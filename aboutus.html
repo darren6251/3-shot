@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | 3-Shot</title>
+    <!-- Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* --- Vimeo Background --- */
+        #vimeo-bg-iframe {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -100;
+            pointer-events: none; /* Make it unclickable */
+        }
+        @media (min-aspect-ratio: 16/9) { #vimeo-bg-iframe { height: 56.25vw; } }
+        @media (max-aspect-ratio: 16/9) { #vimeo-bg-iframe { width: 177.78vh; } }
+
+        /* --- Dimmer Overlay --- */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -99;
+            pointer-events: none;
+        }
+
+        /* --- General Animations --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-600 { animation-delay: 0.6s; }
+        
+        /* --- Nav Link --- */
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+        
+        /* --- Button --- */
+        .cta-btn { transition: all 0.3s ease; }
+        .cta-btn:hover {
+            background-color: #fff;
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- Separator --- */
+        .section-separator {
+            width: 80px;
+            height: 3px;
+            background-color: #fff;
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+
+    <!-- Background Video -->
+    <iframe 
+        src="https://player.vimeo.com/video/1129973132?background=1&autoplay=1&loop=1&muted=1&badge=0&autopause=0&player_id=0&app_id=58479" 
+        id="vimeo-bg-iframe" 
+        frameborder="0" 
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        title="3-shotvideo blacground">
+    </iframe>
+    
+    <!-- Dimmer Overlay -->
+    <div class="video-overlay"></div>
+
+    <!-- Wrapper for content --><div class="relative z-10">
+
+        <!-- Header / Navigation --><header class="sticky top-0 z-50 bg-black/50 backdrop-blur-md">
+            <nav class="container mx-auto max-w-6xl px-6 py-4 flex justify-between items-center">
+                <!-- 
+                  LOGO PLACEHOLDER
+                  UPDATED: Added inline style="opacity: 1;" to make it visible on this page.
+                -->
+                <a href="index.html" id="logo-placeholder" class="text-2xl font-bold tracking-wider" style="opacity: 1;">
+                    <img src="https://placehold.co/120x50/000000/FFFFFF?text=3-SHOT" alt="3-Shot Logo" class="h-8 w-auto grayscale">
+                </a>
+                
+                <!-- Menu -->
+                <!-- UPDATED: Nav links modified -->
+                <ul class="hidden md:flex space-x-8 font-medium">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="aboutus.html" class="nav-link">About Us</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <!-- Mobile Menu Button --><button class="md:hidden text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Content --><main>
+
+            <!-- 
+              NEW: About Us Section
+              Content pulled from your old site.
+            -->
+            <section class="min-h-[calc(100vh-80px)] h-full flex items-center justify-center text-center px-6 py-24">
+                
+                <div class="max-w-3xl">
+
+                    <h1 class="animate-fadeInUp text-4xl sm:text-6xl font-black uppercase tracking-tighter">
+                        Get to know <span class="text-gray-400">Us</span>.
+                    </h1>
+                    <div class="animate-fadeInUp delay-200 section-separator"></div>
+
+                    <p class="animate-fadeInUp delay-400 mt-8 text-lg sm:text-xl text-gray-300 leading-relaxed">
+                        3-Shot is a video editing company founded by three high school students. Our aim is to create custom videos that are trendy and appealing to all, from the perspective of young generations.
+                    </p>
+                    <p class="animate-fadeInUp delay-600 mt-6 text-lg sm:text-xl text-gray-300 leading-relaxed">
+                        At 3-Shot, we firmly believe in the accessibility of video creation, adhering to the mantra "Take, Edit, Export! Creating video has never been easier than this before."
+                    </p>
+                
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- Footer --><footer class="py-12 bg-gray-900 border-t border-gray-800">
+            <div class="container mx-auto max-w-6xl px-6 text-center text-gray-400">
+                <p>&copy; <span id="current-year"></span> 3-Shot. All rights reserved.</p>
+                <p class="text-sm mt-2">Powered by your vision. Perfected by us.</p>
+            </div>
+        </footer>
+
+    </div>
+    
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Intersection Observer for general animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-fadeInUp').forEach(el => {
+            observer.observe(el);
+        });
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .animate-fadeInUp.visible {
+                animation: fadeInUp 0.8s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // NOTE: Homepage-specific logo animation script was intentionally removed from this page.
+        
+    </script>
+
+</body>
+</html>
