@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEIC to PNG/JPEG Converter | 3-Shot Tools</title>
+    <!-- Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- 
+      FIX: Using the 'full' build of the library.
+      The 'min.js' version doesn't include the necessary decoders.
+      The 'full.min.js' is required for browsers that don't natively support HEIC.
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.full.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000; 
+            color: #fff;
+            overflow-x: hidden;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-600 { animation-delay: 0.6s; }
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: -5px; left: 50%; transform: translateX(-50%);
+            background-color: #fff; transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+        .cta-btn { transition: all 0.3s ease; }
+        .cta-btn:hover {
+            background-color: #fff; color: #000;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        .section-separator {
+            width: 80px; height: 3px; background-color: #fff;
+            margin: 1rem auto; border-radius: 2px;
+        }
+        .tool-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        #drop-zone {
+            border: 3px dashed rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        #drop-zone.drag-over {
+            border-color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        #file-input { display: none; }
+        .tool-select {
+            background-color: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.2s ease;
+        }
+        .tool-select:focus {
+            background-color: rgba(0,0,0,0.5);
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255,255,255,0.3);
+            outline: none;
+        }
+        #mobile-menu { transition: transform 0.3s ease-in-out; }
+        #mobile-menu.active { transform: translateX(0); }
+    </style>
+</head>
+<body class="bg-black text-white">
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black z-[60] transform -translate-x-full md:hidden">
+        <div class="flex justify-end p-6">
+            <button id="close-menu-btn">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <nav class="flex flex-col items-center justify-center h-full -mt-16 space-y-8">
+            <a href="../index.html" class="text-3xl font-bold nav-link">Home</a>
+            <a href="../aboutus/aboutus.html" class="text-3xl font-bold nav-link">About Us</a>
+            <a href="heic-converter.html" class="text-3xl font-bold nav-link">HEIC Converter</a>
+            <a href="qr-generator.html" class="text-3xl font-bold nav-link">QR Generator</a>
+            <a href="../index.html#contact" class="text-3xl font-bold nav-link">Contact</a>
+        </nav>
+    </div>
+
+    <!-- Wrapper for content --><div class="relative z-10">
+        <!-- Header / Navigation --><header class:="sticky top-0 z-50 bg-black/50 backdrop-blur-md">
+            <nav class="container mx-auto max-w-6xl px-6 py-4 flex justify-between items-center">
+                <a href="../index.html" id="logo-placeholder" class="text-2xl font-bold tracking-wider" style="opacity: 1;">
+                    <img src="https://placehold.co/120x50/000000/FFFFFF?text=3-SHOT" alt="3-Shot Logo" class="h-8 w-auto grayscale">
+                </a>
+                <ul class="hidden md:flex space-x-8 font-medium items-center">
+                    <li><a href="../index.html" class="nav-link">Home</a></li>
+                    <li><a href="../aboutus/aboutus.html" class="nav-link">About Us</a></li>
+                    <li class="relative group">
+                        <button class="nav-link flex items-center text-white font-bold"> <!-- Active page style -->
+                            Tools
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <ul class="absolute left-0 mt-2 w-48 bg-black/80 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg py-2 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                            <li><a href="heic-converter.html" class="block px-4 py-2 hover:bg-gray-700">HEIC Converter</a></li>
+                            <li><a href="qr-generator.html" class="block px-4 py-2 hover:bg-gray-700">QR Generator</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <button id="open-menu-btn" class="md:hidden text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Content --><main>
+            <section class="min-h-[calc(100vh-80px)] h-full flex items-center justify-center text-center px-6 py-24">
+                
+                <div class="container mx-auto max-w-2xl w-full">
+                    <h1 class="animate-fadeInUp text-4xl sm:text-5xl font-black uppercase tracking-tighter">
+                        HEIC to <span class="text-gray-400">PNG/JPEG</span>
+                    </h1>
+                    <div class="animate-fadeInUp delay-200 section-separator"></div>
+                    <p class="animate-fadeInUp delay-400 mt-6 text-lg text-gray-300">
+                        Convert Apple HEIC photos into a format that works anywhere.
+                    </p>
+
+                    <div class="animate-fadeInUp delay-600 tool-card w-full p-8 rounded-lg mt-12">
+                        
+                        <!-- File Drop Zone -->
+                        <input type="file" id="file-input" accept=".heic, .heif" multiple>
+                        <label for="file-input" id="drop-zone" class="flex flex-col items-center justify-center w-full h-64 rounded-lg cursor-pointer">
+                            <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-4-4V6a4 4 0 014-4h10a4 4 0 014 4v6a4 4 0 01-4 4H7z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 16v1.5a2.5 2.5 0 005 0V16m-5 0h-4.5M16 16v-6a2 2 0 012-2h2"></path></svg>
+                            <p class="font-semibold text-xl">Drop HEIC files here</p>
+                            <p class="text-gray-400">or click to browse</p>
+                            <p id="file-name" class="text-white font-medium mt-2"></p>
+                        </label>
+
+                        <!-- Options -->
+                        <div class="mt-6 flex flex-col sm:flex-row justify-center items-center gap-6">
+                            <div>
+                                <label for="format-select" class="font-semibold text-lg mr-3">Convert to:</label>
+                                <select id="format-select" class="tool-select p-3 rounded-lg">
+                                    <option value="image/png">PNG</option>
+                                    <option value="image/jpeg">JPEG</option>
+                                </select>
+                            </div>
+                            <button id="convert-btn" class="cta-btn w-full sm:w-auto bg-white text-black font-bold py-3 px-10 rounded-full text-lg uppercase tracking-wider">
+                                Convert
+                            </button>
+                        </div>
+
+                        <!-- Status & Download Area -->
+                        <div id="status-area" class="mt-6 text-lg"></div>
+                        <div id="download-area" class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Download links will appear here -->
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer --><footer class="py-12 bg-gray-900 border-t border-gray-800">
+            <div class="container mx-auto max-w-6xl px-6 text-center text-gray-400">
+                <p>&copy; <span id="current-year"></span> 3-Shot. All rights reserved.</p>
+                <p class="text-sm mt-2">Powered by your vision. Perfected by us.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- 
+      FIX: SCRIPT IS NOW AT THE BOTTOM, but the library is in the <head>
+    -->
+    <script>
+        
+        let retryCounter = 0;
+        const maxRetries = 100; // Wait for max 5 seconds (100 * 50ms)
+
+        function initializeHeicConverter() {
+            // Check if the library is loaded
+            if (typeof heic2any !== 'undefined') {
+                // --- IT'S LOADED! ---
+                runHeicConverter();
+            } else if (retryCounter < maxRetries) {
+                // --- NOT LOADED YET ---
+                retryCounter++;
+                setTimeout(initializeHeicConverter, 50);
+            } else {
+                // --- FAILED TO LOAD ---
+                console.error('heic2any library failed to load after 5 seconds.');
+                const statusArea = document.getElementById('status-area');
+                if (statusArea) {
+                    statusArea.textContent = 'Error: Could not load converter library. Please refresh.';
+                }
+            }
+        }
+
+        // This function holds all the logic, and only runs when the library is ready
+        function runHeicConverter() {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // --- HEIC CONVERTER SCRIPT ---
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            const fileNameEl = document.getElementById('file-name');
+            const convertBtn = document.getElementById('convert-btn');
+            const formatSelect = document.getElementById('format-select');
+            const statusArea = document.getElementById('status-area');
+            const downloadArea = document.getElementById('download-area');
+
+            let filesToConvert = [];
+            
+            // Drag & Drop
+            if(dropZone) dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+            if(dropZone) dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('drag-over');
+            });
+            if(dropZone) dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                handleFiles(e.dataTransfer.files);
+            });
+            if(fileInput) fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+
+            function handleFiles(files) {
+                filesToConvert = Array.from(files);
+                if (filesToConvert.length === 0) {
+                    if(fileNameEl) fileNameEl.textContent = 'No files selected';
+                    return;
+                }
+                if (filesToConvert.length === 1) {
+                    if(fileNameEl) fileNameEl.textContent = files[0].name;
+                } else {
+                    if(fileNameEl) fileNameEl.textContent = `${filesToConvert.length} files selected`;
+                }
+                if(statusArea) statusArea.textContent = '';
+                if(downloadArea) downloadArea.innerHTML = '';
+            }
+
+            // Convert Button
+            if(convertBtn) convertBtn.addEventListener('click', async () => {
+                if (filesToConvert.length === 0) {
+                    if(statusArea) statusArea.textContent = 'Please select files to convert first.';
+                    return;
+                }
+
+                if(statusArea) statusArea.textContent = 'Converting... This may take a moment.';
+                convertBtn.disabled = true;
+                if(downloadArea) downloadArea.innerHTML = '';
+
+                const format = formatSelect.value;
+                const extension = format === 'image/png' ? 'png' : 'jpg';
+
+                for (const file of filesToConvert) {
+                    try {
+                        if(statusArea) statusArea.textContent = `Converting ${file.name}...`;
+                        const conversionResult = await heic2any({
+                            blob: file,
+                            toType: format,
+                            quality: 0.9, // for JPEG
+                        });
+                        
+                        const results = Array.isArray(conversionResult) ? conversionResult : [conversionResult];
+
+                        results.forEach((resultBlob, index) => {
+                            const url = URL.createObjectURL(resultBlob);
+                            let newFileName = file.name.replace(/\.[^/.]+$/, "");
+                            if (results.length > 1) {
+                                newFileName += `_${index + 1}`;
+                            }
+                            newFileName += `.${extension}`;
+                            
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = newFileName;
+                            a.textContent = `Download ${newFileName}`;
+                            a.className = 'cta-btn block text-center bg-transparent border-2 border-white text-white font-bold py-2 px-6 rounded-full text-md uppercase tracking-wider';
+                            if(downloadArea) downloadArea.appendChild(a);
+                        });
+
+                    } catch (error) {
+                        console.error(error);
+                        const errorEl = document.createElement('p');
+                        errorEl.className = 'text-red-400';
+                        // FIX: Check for the specific error message
+                        if (error.code === 2) {
+                             errorEl.textContent = `Failed to convert ${file.name}. Format not supported by this library version.`;
+                        } else {
+                             errorEl.textContent = `Failed to convert ${file.name}. File might be corrupt or unsupported.`;
+                        }
+                        if(downloadArea) downloadArea.appendChild(errorEl);
+                    }
+                }
+                
+                if(statusArea) statusArea.textContent = 'Conversion complete!';
+                convertBtn.disabled = false;
+                filesToConvert = []; // Clear queue
+            });
+        }
+
+        // --- Mobile Menu Toggle ---
+        const openMenuBtn = document.getElementById('open-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu'); 
+        
+        if (mobileMenu) {
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+            if (openMenuBtn && closeMenuBtn) {
+                openMenuBtn.addEventListener('click', () => mobileMenu.classList.add('active'));
+                closeMenuBtn.addEventListener('click', () => mobileMenu.classList.remove('active'));
+                mobileMenuLinks.forEach(link => {
+                    link.addEventListener('click', () => mobileMenu.classList.remove('active'));
+                });
+            }
+        }
+
+        // --- START THE APP ---
+        // This is the only thing that runs on load.
+        initializeHeicConverter();
+        
+    </script>
+</body>
+</html>
+
