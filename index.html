@@ -165,7 +165,7 @@
             }
         }
         
-        /* --- NEW: Mobile Menu --- */
+        /* --- Mobile Menu --- */
         #mobile-menu {
             transition: transform 0.3s ease-in-out;
         }
@@ -178,8 +178,7 @@
 <body class="bg-black text-white">
 
     <!-- 
-      NEW: Animation Overlay
-      This is the huge "3-SHOT" that appears on load.
+      Animation Overlay
     -->
     <div id="logo-animation-overlay">
         <h1 id="animated-logo-h1">3-SHOT</h1>
@@ -198,7 +197,7 @@
     <!-- Dimmer Overlay -->
     <div class="video-overlay"></div>
 
-    <!-- NEW: Mobile Menu Overlay -->
+    <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-black z-[60] transform -translate-x-full md:hidden">
         <div class="flex justify-end p-6">
             <button id="close-menu-btn">
@@ -208,6 +207,9 @@
         <nav class="flex flex-col items-center justify-center h-full -mt-16 space-y-8">
             <a href="index.html" class="text-3xl font-bold nav-link">Home</a>
             <a href="aboutus/aboutus.html" class="text-3xl font-bold nav-link">About Us</a>
+            <!-- NEW: Tools Links -->
+            <a href="tools/heic-converter.html" class="text-3xl font-bold nav-link">HEIC Converter</a>
+            <a href="tools/qr-generator.html" class="text-3xl font-bold nav-link">QR Generator</a>
             <a href="#contact" class="text-3xl font-bold nav-link">Contact</a>
         </nav>
     </div>
@@ -224,9 +226,22 @@
                 </a>
                 
                 <!-- Menu -->
-                <ul class="hidden md:flex space-x-8 font-medium">
+                <ul class="hidden md:flex space-x-8 font-medium items-center">
                     <li><a href="index.html" class="nav-link">Home</a></li>
                     <li><a href="aboutus/aboutus.html" class="nav-link">About Us</a></li>
+                    
+                    <!-- NEW: Tools Dropdown -->
+                    <li class="relative group">
+                        <button class="nav-link flex items-center">
+                            Tools
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <ul class="absolute left-0 mt-2 w-48 bg-black/80 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg py-2 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                            <li><a href="tools/heic-converter.html" class="block px-4 py-2 hover:bg-gray-700">HEIC Converter</a></li>
+                            <li><a href="tools/qr-generator.html" class="block px-4 py-2 hover:bg-gray-700">QR Generator</a></li>
+                        </ul>
+                    </li>
+                    
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                 </ul>
                 
@@ -241,11 +256,10 @@
         <!-- Main Content --><main>
 
             <!-- 
-              NEW: Hero Section
+              Hero Section
             -->
             <section class="min-h-[calc(100vh-80px)] h-full flex items-center justify-center text-left px-6 py-24 transition-all duration-1000 ease-in-out">
                 
-                <!-- This is the grid container for the two sliders -->
                 <div id="hero-section" class="w-full">
 
                     <!-- 1. Title Slider (Left) -->
@@ -442,7 +456,7 @@
             }, 1000); // 1-second delay before starting
         });
         
-        // --- NEW: Mobile Menu Toggle ---
+        // --- Mobile Menu Toggle ---
         const openMenuBtn = document.getElementById('open-menu-btn');
         const closeMenuBtn = document.getElementById('close-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -471,6 +485,4 @@
 
 </body>
 </html>
-
-
 
