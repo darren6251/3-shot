@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darren Ng | 3-Shot Team</title>
+    <!-- Tailwind CSS CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* --- Vimeo Background --- */
+        #vimeo-bg-iframe {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -100;
+            pointer-events: none; /* Make it unclickable */
+        }
+        @media (min-aspect-ratio: 16/9) { #vimeo-bg-iframe { height: 56.25vw; } }
+        @media (max-aspect-ratio: 16/9) { #vimeo-bg-iframe { width: 177.78vh; } }
+
+        /* --- Dimmer Overlay --- */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Darker overlay for focus */
+            z-index: -99;
+            pointer-events: none;
+        }
+
+        /* --- General Animations --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-600 { animation-delay: 0.6s; }
+        .delay-800 { animation-delay: 0.8s; }
+        
+        /* --- Nav Link --- */
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+        
+        /* --- Separator --- */
+        .section-separator {
+            width: 80px;
+            height: 3px;
+            background-color: #fff;
+            margin: 1rem 0;
+            border-radius: 2px;
+        }
+
+        /* Tag for skills */
+        .skill-tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .skill-tag:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* NEW: Experience Card */
+        .experience-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .experience-card:hover {
+            transform: scale(1.03);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* NEW: Contact Icon */
+        .contact-icon {
+            transition: all 0.2s ease;
+        }
+        .contact-icon:hover {
+            transform: scale(1.1);
+            color: #cbd5e1; /* text-slate-300 */
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+
+    <!-- Background Video -->
+    <iframe 
+        src="https://player.vimeo.com/video/1129973132?background=1&autoplay=1&loop=1&muted=1&badge=0&autopause=0&player_id=0&app_id=58479" 
+        id="vimeo-bg-iframe" 
+        frameborder="0" 
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        title="3-shotvideo blacground">
+    </iframe>
+    
+    <!-- Dimmer Overlay -->
+    <div class="video-overlay"></div>
+
+    <!-- Wrapper for content --><div class="relative z-10">
+
+        <!-- Header / Navigation --><header class="sticky top-0 z-50 bg-black/50 backdrop-blur-md">
+            <nav class="container mx-auto max-w-6xl px-6 py-4 flex justify-between items-center">
+                <!-- 
+                  LOGO PLACEHOLDER
+                -->
+                <a href="../../index.html" id="logo-placeholder" class="text-2xl font-bold tracking-wider" style="opacity: 1;">
+                    <img src="https://placehold.co/120x50/000000/FFFFFF?text=3-SHOT" alt="3-Shot Logo" class="h-8 w-auto grayscale">
+                </a>
+                
+                <!-- Menu -->
+                <ul class="hidden md:flex space-x-8 font-medium">
+                    <li><a href="../../index.html" class="nav-link">Home</a></li>
+                    <li><a href="../aboutus.html" class="nav-link">About Us</a></li>
+                    <li><a href="../../index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                
+                <!-- Mobile Menu Button --><button class="md:hidden text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Content --><main>
+
+            <!-- 
+              Member Page Section
+            -->
+            <section class="min-h-[calc(100vh-80px)] h-full flex items-center justify-center px-6 py-24">
+                
+                <div class="container mx-auto max-w-6xl">
+                    <div class="grid md:grid-cols-3 gap-12 items-center">
+                        
+                        <!-- Image Column -->
+                        <div class="md:col-span-1 animate-fadeInUp">
+                            <!-- TODO: Replace this placeholder with Darren's actual photo -->
+                            <img src="https://lh3.googleusercontent.com/sitesv/AICyYdb0lah7AEELP97Hzs4k6vRHcLWp76yaPUBZfWSRJucLgtjOxJVs-fTt2XzgmYNfiFkvBCGEyvYJiqf8UaeKCg0_9dPbrzmwtq-REcaW6ywKQAL2GSlXjEm1N2iMawg_YoBcQ6HPNiziDmA2bLrUWXlGvMPonQE3kKm8avHOPr1Pz-QaDAptDOdKicvpcSLacQs6_q2ldiPLuMELsHEgby1rdHPqOMSjDD85x3M=w1280" alt="Darren Ng" class="rounded-lg shadow-2xl w-full aspect-square object-cover border-2 border-gray-700">
+                        </div>
+
+                        <!-- Info Column -->
+                        <div class="md:col-span-2 text-left">
+                            <h1 class="animate-fadeInUp delay-200 text-4xl sm:text-6xl font-black uppercase tracking-tighter">
+                                Darren Ng
+                            </h1>
+                            <h2 class="animate-fadeInUp delay-400 text-2xl text-gray-400 font-medium mb-4">
+                                CEO of 3-shot
+                            </h2>
+                            <div class="animate-fadeInUp delay-600 section-separator"></div>
+
+                            <p class="animate-fadeInUp delay-600 mt-6 text-lg text-gray-300 leading-relaxed">
+                                "Talkative, out-going, easy to chat with me!"
+                            </p>
+                            
+                            <!-- NEW: Contact Section -->
+                            <div class="animate-fadeInUp delay-800 mt-8">
+                                <h3 class="text-xl font-bold uppercase tracking-wider mb-4">Connect</h3>
+                                <div class="flex flex-wrap gap-6 items-center">
+                                    <a href="https://www.linkedin.com/in/darren6251" target="_blank" rel="noopener noreferrer" class="contact-icon flex items-center gap-2 text-gray-400">
+                                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.783-1.75-1.75s.784-1.75 1.75-1.75 1.75.783 1.75 1.75-.783 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                        linkedin.com/in/darren6251
+                                    </a>
+                                    <a href="https://www.instagram.com/darren.6251" target="_blank" rel="noopener noreferrer" class="contact-icon flex items-center gap-2 text-gray-400">
+                                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.148 3.225-1.664 4.77-4.919 4.919-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.07-1.646-.07-4.85s.012-3.584.07-4.85c.148-3.227 1.664-4.77 4.919-4.919 1.266-.057 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.059 1.689.073 4.948.073s3.667-.014 4.947-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.947s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.689-.073-4.947-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z"/></svg>
+                                        @darren.6251
+                                    </a>
+                                    <a href="mailto:darrenng@3-shot.com" class="contact-icon flex items-center gap-2 text-gray-400">
+                                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+                                        darrenng@3-shot.com
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills & Experiences moved below -->
+                    <div class="grid md:grid-cols-3 gap-12 mt-16">
+                        <!-- Skills -->
+                        <div class="md:col-span-1 animate-fadeInUp delay-200">
+                            <h3 class="text-2xl font-bold uppercase tracking-wider mb-4">Skills</h3>
+                            <div class="flex flex-wrap gap-3">
+                                <span class="skill-tag">5 years video editing</span>
+                                <span class="skill-tag">Adobe Premiere Pro</span>
+                                <span class="skill-tag">Cantonese</span>
+                                <span class="skill-tag">Mandarin</span>
+                                <span class="skill-tag">English</span>
+                            </div>
+                        </div>
+
+                        <!-- Experiences -->
+                        <div class="md:col-span-2 animate-fadeInUp delay-400">
+                            <h3 class="text-2xl font-bold uppercase tracking-wider mb-6">Experiences</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                
+                                <!-- Experience Card 1 -->
+                                <div class="experience-card rounded-lg overflow-hidden">
+                                    <!-- TODO: Replace placeholder -->
+                                    <img src="https://lh3.googleusercontent.com/sitesv/AICyYdb1K3Uy2QHQBgBhRDyA6OG24r931Jg_xjqy-bcbf1N-KtrVm4pL8EYtpSJ9afXAO5O-QN6yArzTSLff1HsrLVsoY7TFi0-TJJT-O2EJXOno9Y_rhbQ9PpDVg05DnNAawISNh1CGjUJ0ok5bkaUV4yH60XrfUt3eNkc8IwBpqxb8lODsBdagNJ4fXxlXH1ZxbBCmCddJue-SLWUpouQRi7MizmHA5_X6eqyY=w1280" alt="Smart Logistics Datathon 2024" class="w-full h-40 object-cover">
+                                    <div class="p-5">
+                                        <h4 class="font-bold text-lg">Smart Logistics Datathon 2024</h4>
+                                        <p class="text-gray-300 text-sm mt-2">Organized by the Asian Institute of Supply Chains & Logistics (AISCL) at The Chinese University of Hong Kong.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Experience Card 2 -->
+                                <div class="experience-card rounded-lg overflow-hidden">
+                                    <!-- TODO: Replace placeholder -->
+                                    <img src="https://lh3.googleusercontent.com/sitesv/AICyYdYFZfmBvYOhUxhB_yiXnBI9hRwL-_2u3r9lV8bXGIdR9Z8Ma4jLBtoVDq1kfoUA6L0blmFKrnMQy6NXipbc6ayIxmg0bJiHzILuJrJAHReFqW9ag0v5BqWuiNMTGS0LNqpBrT73MYeDmJ_5Uwjjsfiq7sBQgBDePdo7UMCu4XEmJylEeDiaJe8vOuguNsnMABKk57eFB0rcRm4Nfb_RxMq-8Qpm2JL0wJY-Sxg=w1280" alt="Morning Announcement Video Editor" class="w-full h-40 object-cover">
+                                    <div class="p-5">
+                                        <h4 class="font-bold text-lg">Morning Announcement Video Editor</h4>
+                                        <p class="text-gray-300 text-sm mt-2">To spread essential information among schoolmates, a proper announcement is needed.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+        <!-- Footer --><footer class="py-12 bg-gray-900 border-t border-gray-800">
+            <div class="container mx-auto max-w-6xl px-6 text-center text-gray-400">
+                <p>&copy; <span id="current-year"></span> 3-Shot. All rights reserved.</p>
+                <p class="text-sm mt-2">Powered by your vision. Perfected by us.</p>
+            </div>
+        </footer>
+
+    </div>
+    
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Intersection Observer for general animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-fadeInUp').forEach(el => {
+            observer.observe(el);
+        });
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .animate-fadeInUp.visible {
+                animation: fadeInUp 0.8s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(style);
+        
+    </script>
+
+</body>
+</html>
+
